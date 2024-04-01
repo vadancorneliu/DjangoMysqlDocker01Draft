@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  db:
+    image: mysql:8.3.0
+    # image: mysql:5.7
+    container_name: mysql_db_container
+    volumes:
+      - ./data/mysql/db:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: 'django-app-db'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
+  app:
+    build: .
+    volumes:
+      - .:/django-app
+    ports:
+      - 8000:8000
+    image: django01draft_img:1.0
+    container_name: django01draft_container
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - db
+  
